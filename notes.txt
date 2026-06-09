@@ -209,3 +209,55 @@ class - 1
         -> NOTE: Within Project we have Issues 
 
         -> https://everhour.com/blog/wp-content/uploads/2017/05/github-zenhub-1024x433.png
+
+
+class - 2
+==========
+
+    -> Start LMS Project (Development - Developer)
+
+        -> Create GitHub Account - https://github.com
+
+        -> Create Repository 
+
+        -> Assign Work To Developers - Projects & Issues 
+
+        -> Developers will start coding - Versioning Starts 
+
+        -> Developers will finally update code to GitHub Repository 
+
+
+    -> Start LMS Project (Development - Developer)
+
+        -> Create GitHub Account 
+            
+            -> https://github.com
+
+        -> Create Repository 
+
+            -> https://github.com/ravi2krishna/login-2590.git
+
+        -> Assign Work To Developers - Projects & Issues 
+
+            -> Project - https://github.com/users/ravi2krishna/projects/15/views/1
+
+            -> Issues - https://github.com/ravi2krishna/login-2590/issues
+
+        -> Developers Will Start Coding - Versioning Starts 
+
+            -> Install Git Software In Laptop For Versioning
+
+                -> Open GitBash 
+
+                -> Setting Git Configuration 
+
+                    -> git config --global user.name "ravi2krishna"
+
+                    -> git config --global user.email "ravi2krishna@gmail.com"
+
+            -> Install Visual Studio Code (VS Code) To Write Code 
+
+            -> Start Coding For Issues / Features Assigned to them 
+
+        -> Developers Will Update Code To GitHub Repository
+
