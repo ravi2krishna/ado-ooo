@@ -730,3 +730,31 @@ class - 5
 
     
     -> NOTE: Once LAB is done with Sonar Analysis, Delete SonarQube Server 
+
+
+class - 6
+==========
+
+    -> Shell Scripting 
+
+        -> A shell script is a computer program, or text file, that contains 
+        a "sequence of commands" for a Unix-based operating system's shell 
+        (command-line interpreter) to execute automatically. 
+        It functions as a program to "automate repetitive tasks" that a user 
+        would otherwise have to type manually into the terminal one command at a time.   
+
+        -> Deployment Script 
+
+            -> https://raw.githubusercontent.com/ravi2krishna/login-2603/refs/heads/scripts/deploy.sh
+
+    -> To Download We have wget command 
+
+        -> wget <link> 
+
+        -> ls 
+
+        -> wget https://raw.githubusercontent.com/ravi2krishna/login-2603/refs/heads/scripts/deploy.sh    
+
+        -> ls 
+
+        -> sh deploy.sh    
