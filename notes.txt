@@ -993,3 +993,201 @@ class - 7
             -> Check Application in Browser
 
     -> NOTE: Terminate Server Once Lab is done 
+
+
+class - 8
+==========
+
+    -> Project 1 - Understanding LMS Project 
+
+    -> NOTE: Next Goal is to implement "DevOps Practices" On Project - 1 
+
+    -> DevOps is a set of PRACTICES that works towards the 
+    "AUTOMATION" and "INTEGRATION" of the processes between 
+    Software Development (Dev) and IT (Ops) teams, 
+    so that organizations can "BUILD", "TEST" and "DEPLOY" 
+    softwares/applications "FASTER" and more "RELIABLE" 
+
+    -> DevOps Engineer 
+
+        -> DevOps Engineers will implement DevOps "PRACTICES" Using "TOOLS", 
+        so that organizations can Build, Test & Deploy (Delivery Line) 
+        Softwares More "FASTER" & "RELIABLE".
+
+    
+    -> Project 1 (LMS Application)
+
+        -> Above Project Took 90 Mins To Deploy 
+
+    -> From DevOps Team, Organizations are Looking for Acceleration i.e making 
+    Deployments "FASTER"
+
+        -> From our earlier experience, Using SonarQube Takes 45 mins Traditionally 
+
+            -> We Used Docker got the same thing done is 5 Mins 
+
+    -> Why Shouldn't we apply Docker On Whole Application Process ??? 
+
+        -> Whole Application Process (Dev To Ops) -> Traditionally Took 90 mins
+
+        -> Whole Application Process (Dev To Ops) -> DevOps Way Using Docker - Takes 5 mins
+
+    
+    -> How To make Whole Application Process Deployed in 5 Mins ??
+
+        -> sudo docker container run -dt --name sonarqube --restart=always -p 9000:9000 sonarqube
+
+    
+    -> NOTE: To Accelerate Development & Deployment Process, We use "Containerization" Practice 
+
+
+    -> Project - 2 
+
+        -> Implement Acceleration i.e "FASTER" Deployments Using "Containerization" Practice
+
+    -> Containerization
+
+        -> Containerization is one of the practices in devops, which provides 
+
+            -> "Lightweight" and "Efficient" way of running applications 
+
+            -> Promotes "Faster Deployments" and "Portability" for applications
+
+        -> NOTE: Containerization is implemented by software/tool "DOCKER" 
+
+    
+    -> Container 
+
+        -> An object for holding or transporting something 
+
+            -> https://upload.wikimedia.org/wikipedia/commons/d/df/Container_01_KMJ.jpg
+
+        -> In terms of software development, a container is an object 
+        for holding or transporting/shipping applications.
+
+            -> https://cdn.prod.website-files.com/67615512eed3697e5e735df6/67c1d375b94ef6458106170b_vrGMCnHTQY2TKkXLNFbx.jpeg
+
+
+    -> Monolithic Architecture
+
+        -> Monolithic architecture is a software design pattern where the entire application 
+        is built as a "single, indivisible unit".
+
+        -> https://img.favpng.com/25/1/18/microservices-nginx-monolithic-application-domain-driven-design-reverse-proxy-png-favpng-w2rapqPnDTMhzWnRp1SnfFUvi.jpg
+
+
+    -> Micro Services Architecture
+
+        -> Microservices Architecture is a software development approach that involves 
+        building "small, independent services" that work 
+        
+        -> https://media2.dev.to/dynamic/image/width=800%2Cheight=%2Cfit=scale-down%2Cgravity=auto%2Cformat=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Ft1ien7stu2l7v1u7mfjl.png
+
+    -> NOTE: As DevOps Engineer, Deploying Micro Sized Applications(Micro Services) 
+    on Containers is our primary work on projects 
+
+    -> https://substackcdn.com/image/fetch/$s_!t0Wm!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2F14409324-6525-49f9-85b5-ea416d4efffb_2556x1383.jpeg
+
+
+    -> Docker Architecture / Components 
+
+        -> Docker Client (CLI)
+
+        -> Docker Server (Daemon)
+
+        -> Docker Registry (Docker Hub - https://hub.docker.com/)
+
+        -> Docker Images 
+
+        -> Docker Container 
+
+        -> https://assets.bytebytego.com/diagrams/0414-how-does-docker-work.png
+
+    
+    -> Python is Programming "Language" 
+    -> SonarQube is Code Analysis "Tool"
+    -> Ubuntu is Operating System "System Software"
+    -> Postgres is Database 
+
+    -> NOTE: All above are present in Docker Registry As Images (https://hub.docker.com)
+
+    -> Python is an Image
+    -> SonarQube is an Image
+    -> Ubuntu is an Image
+    -> Postgres is an Image
+
+
+    -> NOTE: All the above Images are stored in Docker Registry, 
+    just like Different Applications on Play Store,
+    if an Application is not available on Play Store, We can Build.
+    Same way we can build our own Custom Docker Images Too and Store on Docker Registry.
+
+    -> To Create Container, we use Docker Client (CLI) and make a request 
+
+            -> DevOps Engineer -> Makes Request For Creating Container Using Docker Client (CLI)
+
+                -> Docker Client (CLI) -> Sends Request To Docker Server (Daemon) 
+                    -> Daemon Connects To Docker Registry -> Fetch Docker Images to Server(compute) 
+                        -> Using Image Daemon Runs/Creates Containers
+
+    
+        -> The Daemon/Service is responsible for managing Docker objects 
+        such as images, containers, and networks. All the heavy lifting is done by daemon.
+        
+        -> The client sends commands to the daemon and receives output. 
+        
+        -> The registry stores Docker images and allows them to be shared among users and systems.
+
+        -> A Docker image is a lightweight, standalone, and executable package 
+        that includes everything needed to run the desired software application.
+
+        -> A container in Docker allows you to run an application with all the dependencies it needs. 
+        To create a container we need Docker Image.
+
+
+    -> Setup Docker 
+
+        -> 2 CPU - 4 GB RAM - 30 GB Storage 
+
+        -> Make sure to add following ports part of your Firewall 
+
+            -> 22, 80, 32768-61000, 8080-9090
+
+                -> 32768-61000 -> Docker Pre Defined Range(mandatory)
+                -> 8080-9090   -> User Defined Range(Optional i.e Based On Requirements)
+                -> 3000-5000   -> User Defined Range(Optional i.e Based On Requirements)
+
+    
+        -> Install Docker 
+
+            -> docker 
+            -> wget -O get-docker.sh https://get.docker.com && sh get-docker.sh
+            -> docker 
+
+        -> Check Docker information
+
+            -> docker info 
+            
+            -> NOTE: Permission issues as ubuntu user cannot work with docker daemon, 
+            fix by adding ubuntu user to docker group
+
+            -> sudo usermod -aG docker ubuntu
+            -> newgrp docker 
+
+            -> docker info 
+
+        -> Check Docker Images 
+
+            -> docker image ls 
+
+        -> Check Docker Containers  
+
+            -> docker container ls -a 
+        
+        -> Create Docker Container
+
+            -> docker container run --name name_of_container image_name
+
+            -> NOTE: hello-world docker image confirms installation status 
+
+            -> docker container run --name c1 hello-world
