@@ -1191,3 +1191,260 @@ class - 8
             -> NOTE: hello-world docker image confirms installation status 
 
             -> docker container run --name c1 hello-world
+
+
+class - 9
+==========
+
+    -> To Run Containers We Have Modes 
+
+        -> No Mode 
+
+            -> Containers will exit i.e Stopped
+
+            -> docker container run --name c1 hello-world
+
+                -> Name conflicts
+
+            -> docker container run --name ubuntu-container ubuntu
+
+            -> docker container ls -a
+
+            -> NOTE: Containers stopped in No Mode 
+
+
+        -> Interactive Mode / Foreground Mode (Development / Troubleshooting)
+
+            -> Containers will run interactively 
+
+            -> docker container run -it --name name_of_container image_name
+
+            -> docker container run -it --name ubc1 ubuntu 
+
+        -> cat /etc/os-release
+
+            -> Verify By Opening One more Sessions For Docker Server 
+
+                -> docker container ls -a
+
+                -> Check the STATUS 
+
+            -> NOTE: Containers are "Lightweight" and "Efficient"
+
+                -> Run Following Command On Docker Server 
+
+                    -> ps -ef 
+
+                -> Run Following Command On Docker Container (ubc1)
+
+                    -> ps -ef 
+
+                    -> ssh 
+
+                    -> git 
+
+                    -> ss
+
+                -> NOTE: As we have Microservices, we need Micro Sized Environments
+                i.e Containers Using Images Which Has Only What is Required
+
+            -> NOTE: In Interactive Mode Containers Will stop, once we come out of the container
+            i.e it stays alive until you are connected.
+
+        
+        -> Detached Mode / Background Mode (Production)
+
+            -> Containers will "ALWAYS" run in Background, 
+            unless you explicitly Stop 
+
+            -> docker container run -dt --name name_of_container image_name
+
+            -> docker container run -dt --name ubc2 ubuntu 
+
+            -> docker container ls -a
+
+            -> docker container exec name_of_container command_to_execute
+
+            -> docker container exec ubc2 cat /etc/os-release
+
+            -> docker container exec ubc2 ps -ef
+
+            -> To Interact with container use below command 
+
+                -> docker container exec -it name_of_container bash 
+
+                -> docker container exec -it ubc2 bash 
+
+                -> exit 
+
+                -> docker container ls -a 
+
+                    -> NOTE: Container is still up and running, unlike Interactive Mode 
+
+        
+    
+    -> Container Management Commands 
+
+        -> Just Like Servers: Create / Start / Stop / Remove 
+
+        -> With Containers also it's Same: Create / Start / Stop / Remove 
+
+            -> docker container rm name_of_container 
+            -> docker container rm id_of_container 
+
+            -> docker container stop name_of_container 
+            -> docker container stop id_of_container 
+
+            -> docker container start name_of_container 
+            -> docker container start id_of_container
+             
+            -> docker container run -dt --name name_of_container image_name
+
+    
+    
+    -> Goal: Run Web Applications in Containers, like we did in Servers
+
+    -> Procedure In Server / VM 
+
+        -> Create Server 
+        -> Update System 
+        -> Installing Nginx Web Server 
+        -> Fetch Application Code 
+        -> Deploy Application On Nginx Web Server 
+
+    -> Procedure In Container 
+
+        -> docker container run -dt --name webapp ubuntu
+
+        -> sudo ss -ntpl
+
+        -> docker container exec -it webapp bash 
+
+        -> ss -ntpl
+
+        -> apt update -y 
+
+        -> apt install iproute2 -y 
+
+        -> ss -ntpl
+
+        -> apt install nginx -y
+
+        -> service nginx start 
+
+        -> ss -ntpl
+
+    -> Check Container properties
+
+        -> docker container inspect name_of_container
+
+        -> docker container inspect webapp
+
+            -> "IPAddress": "172.17.0.2"
+
+            -> 172.17.0.2 is a private ip created under docker network,
+            private ips work in Intranet.
+
+            -> curl 172.17.0.2
+
+
+    -> NOTE: With Earlier Approach, i might have needed three different Servers 
+
+        -> Server-1: Ecommerce Application On Nginx
+
+        -> Server-2: LMS Application On Nginx
+
+        -> Server-3: CRM Application On Nginx
+
+    
+    -> NOTE: With Docker Approach, i might have needed three different Containers  
+
+        -> Container-1: Ecommerce Application On Nginx
+
+        -> Container-2: LMS Application On Nginx
+
+        -> Container-3: CRM Application On Nginx
+
+    
+    -> docker container run -dt --name ecommerce ubuntu 
+
+        -> docker container exec -it ecommerce bash 
+        -> apt update -y 
+        -> apt install iproute2 -y 
+        -> apt install nginx -y
+        -> service nginx start 
+        -> ss -ntpl 
+        -> exit 
+        -> docker container ls -a 
+
+
+    -> docker container run -dt --name lms ubuntu 
+
+        -> docker container exec -it lms bash 
+        -> apt update -y 
+        -> apt install iproute2 -y 
+        -> apt install nginx -y
+        -> service nginx start 
+        -> ss -ntpl 
+        -> exit 
+        -> docker container ls -a 
+
+    
+    -> docker container run -dt --name crm ubuntu 
+
+        -> docker container exec -it crm bash 
+        -> apt update -y 
+        -> apt install iproute2 -y 
+        -> apt install nginx -y
+        -> service nginx start 
+        -> ss -ntpl 
+        -> exit 
+        -> docker container ls -a 
+
+    
+    -> NOTE: With Above Approach, we need to do redundant actions,
+    that is why it's not a good approach for containers.
+
+
+    -> docker container rm -f crm lms ecommerce webapp
+
+    -> docker container ls -a
+
+    -> docker container run -dt --name webapp ubuntu
+
+    -> docker container ls -a
+
+    -> docker container exec webapp ss -ntpl
+
+    -> docker container inspect webapp
+
+    -> curl 172.17.0.2
+
+    
+    -> NOTE: Below Approach is a recommended way for Containers 
+
+        -> docker container run -dt --name ecommerce nginx
+
+        -> docker container inspect ecommerce
+
+        -> curl 172.17.0.3
+
+        -> docker container run -dt --name lms nginx
+
+        -> docker container inspect lms
+
+        -> curl 172.17.0.4
+
+        -> docker container run -dt --name crm nginx
+
+        -> docker container inspect crm
+
+        -> curl 172.17.0.5
+
+        -> docker container ls -a
+
+        -> docker container exec webapp cat /etc/os-release
+
+        -> docker container exec lms cat /etc/os-release
+
+        -> docker container exec crm cat /etc/os-release
