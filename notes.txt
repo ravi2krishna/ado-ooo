@@ -1448,3 +1448,445 @@ class - 9
         -> docker container exec lms cat /etc/os-release
 
         -> docker container exec crm cat /etc/os-release
+
+
+class - 10
+==========
+
+    -> NOTE: Now How Can We Make Customers Access these 
+    Web Applications From Internet ?? 
+
+    -> To Access Containers Outside i.e Internet (WWW)
+    we need an Understanding of "Docker Networking"
+
+    -> Docker Supports Following Network Drivers, 
+    Each Designed For Specific Use Case 
+
+        -> Host Network Driver 
+
+        -> None Network Driver 
+
+        -> Bridge Network Driver (***)
+
+
+    -> Host Network Driver 
+
+        -> The host network driver in Docker "removes" network isolation 
+        between a container and its host, allowing the container to 
+        share the host's networking namespace directly.
+
+        -> The container does not get its own IP address; 
+        instead, it uses the host's IP address.
+
+        -> No Port Mapping Required: Services running inside the container 
+        bind directly to the host's ports.
+
+        -> Port Conflicts: Because the container uses the host's ports, 
+        you cannot run two containers that use the same port 
+        (e.g., two Nginx instances on port 80) using the host driver.
+
+    
+    -> None Network Driver  
+
+        -> The "none" network driver in Docker provides complete 
+        network isolation by disabling all networking for a container.
+
+        -> The container cannot reach external networks, 
+        and no external network can reach the container.
+
+        -> Loopback Only: allowing internal process communication but no external
+
+        -> Docker does not assign any IP address to containers using this driver.
+
+        -> Check Network Drivers Using 
+
+        -> docker network ls 
+
+        -> docker container ls -a
+
+    -> NOTE: By Default, containers will always run on "bridge" network
+
+        -> docker container run -dt --name crm nginx
+        -> docker container ls -a
+        -> docker container inspect crm
+        -> docker network ls (same id for bridge network)
+        -> docker network inspect bridge
+
+    -> NOTE: We cannot access crm container from internet (from customer Perspective)
+
+        -> Browse Public IP (This site can’t be reached -> Connection Refused)
+
+    -> Host Network
+
+        -> Allows the container to share the host's networking namespace directly i.e 
+        container does not get its own IP address. Instead, it uses the host's IP address.
+
+        -> docker network inspect host 
+                    vs 
+        -> docker network inspect bridge
+
+        -> Create Container Using Host Network
+
+            -> docker container run -dt --name lms --network=host nginx
+            -> docker container ls -a
+            -> docker container inspect lms
+                -> Verify Networks=host and IPAddress="" 
+                -> Browse Public IP  (Connection Works)
+            -> docker network inspect host 
+
+        -> NOTE: Port Conflicts: Because the container uses the host's ports, 
+        you cannot run two containers that use the same port.
+
+            -> let's create multiple containers using bridge network to see Port Conflicts nature
+
+                -> docker container run -dt --name c1 nginx
+                -> docker container run -dt --name c2 nginx
+                -> docker container run -dt --name c3 nginx
+
+                -> All the above three containers will be launched in bridge network
+
+                    -> docker container ls -a
+                    -> docker network inspect bridge
+
+            -> let's create multiple containers using host network to see Port Conflicts nature
+
+                -> docker container run -dt --name w1 --network=host nginx
+                -> docker container run -dt --name w2 --network=host nginx
+                -> docker container run -dt --name w3 --network=host nginx
+
+                -> All the above three containers will be launched in host network
+
+                    -> docker container ls -a
+                    -> NOTE: All three containers exited 
+        
+            -> Check Container Logs Using 
+
+                -> docker container logs name_of_container
+                -> docker container logs crm
+                -> docker container logs lms 
+                -> docker container logs c1
+                -> docker container logs c2
+                -> docker container logs c3
+                -> docker container logs w1
+                    -> nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
+                -> docker container logs w2
+                    -> nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
+                -> docker container logs w3
+                    -> nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
+
+            -> NOTE: To overcome above issue, we use bridge network
+
+    
+    -> None Network Driver  
+
+        -> The "none"driver provides complete network isolation by 
+        disabling all networking for a container.
+
+        -> The container cannot reach external networks, 
+        and no external network can reach the container.
+
+        -> Loopback Only: allowing internal process communication but no external
+
+        -> Docker does not assign any IP address to containers using this driver.
+
+            -> Create Container Using None Network
+
+            -> docker container run -dt --name hrms --network=none nginx
+            -> docker container ls -a
+            -> docker container inspect hrms
+                -> Verify Networks=none and IPAddress="" 
+            -> docker network inspect none 
+
+            -> NOTE: The container cannot reach external networks
+
+                -> docker container ls -a
+                
+                -> docker container inspect crm
+                    -> Verify Networks=bridge
+                -> docker container inspect lms
+                    -> Verify Networks=host
+                -> docker container inspect hrms
+                    -> Verify Networks=none
+
+                -> docker container exec crm apt update -y 
+                -> docker container exec lms apt update -y 
+                -> docker container exec hrms apt update -y 
+
+            -> NOTE: This confirms we have no network access in none network mode
+
+
+    -> Bridge Network Driver (***)            
+
+        -> Bridge Network Driver is default network driver for containers. 
+        When a new container is run, it can be attached to this Bridge network.
+
+        -> Using bridge network we can run multiple containers at same time
+        that can reach external networks as well. 
+        To allow external access Use Port Publishing/Forwarding. 
+
+        -> Port Publishing: To make a container service accessible from outside the host, 
+        you must map a host port to a container port using the -p or --publish flag.
+
+            ->  This is the activity that makes a "port inside a container" 
+            accessible to "ports on the Docker host" for external access.
+
+            -> -P for ephemeral ports (predefined range 32768 to 61000)
+
+        
+            -> docker container ls -a
+                -> docker container run -dt --name no_port_publish nginx
+                -> docker container ls -a
+                -> Browse public ip with port 32768 (site can’t be reached)
+                
+                -> docker container run -dt --name port_publish_one -P nginx
+                -> docker container ls -a
+                -> Browse public ip with port 32768 (now site can be reached)
+
+                -> docker container run -dt --name port_publish_two -P nginx
+                -> docker container ls -a
+                -> Browse public ip with port 32769 (now site can be reached)
+
+                -> docker container run -dt --name port_publish_three -P nginx
+                -> docker container ls -a
+                -> Browse public ip with port 32770 (now site can be reached)
+    
+
+                        
+            -> -p for user Defined ports (predefined range 8080-9090)
+
+                -> docker container run -dt --name name_of_container -p host_port:container_port nginx
+
+                -> Requirement is run on port 8085 & 8088 
+
+                    -> docker container rm -f crm lms c1 c2 c3 w1 w2 w3 hrms no_port_publish
+                    -> docker container ls -a
+                    
+                    -> docker container run -dt --name lms -p 8085:80 nginx   
+                    -> docker container ls -a
+                    -> Browse public ip with 8085 
+
+                    -> docker container run -dt --name crm -p 8088:80 nginx   
+                    -> docker container ls -a
+                    -> Browse public ip with 8088
+
+    
+    -> NOTE: Earlier We Used Below Command 
+
+        -> docker container run -dt --name sonarqube --restart=always -p 9000:9000 sonarqube
+
+        -> --restart=always means restart the container when host machine is restarted 
+
+        -> docker container run -dt --name prod-app --restart=always -p 8080:80 nginx
+
+            -> docker container ls -a
+
+            -> Stop and Start Docker Server
+
+            -> SSH into Docker Server and verify below command
+
+            -> docker container ls -a
+
+            -> Docker Container Clean Up Script 
+
+                -> docker container rm -f $(docker container ls -aq)
+
+                -> docker container ls -a
+
+
+    -> Data Persistency In Containers 
+
+        -> Data Persistency 
+
+            -> Persistent Means Permanent Storage 
+
+                -> Hard Disk
+
+            -> Non-Persistent Means Temporary Storage 
+
+                -> RAM 
+    
+    -> NOTE: By Default Containers are "Non-Persistent" in Nature 
+
+    -> This Design Philosophy Makes Containers Light Weight, 
+    which makes them Portable, and easy to Scale, which is 
+    ideal for "Stateless" Applications 
+
+    -> Goal: Deploy Login Application In Container 
+
+        -> https://github.com/ravi2krishna/login-2590.git
+
+    -> NOTE: Before Getting started, Remove all existing containers 
+
+            -> docker container rm -f $(docker container ls -aq)
+            
+            -> docker container ls -a
+
+            -> Browse Public IP: This site can’t be reached
+
+            -> docker container run -dt --name login-app -p 80:80 nginx   
+
+            -> docker container ls -a
+
+            -> Browse Public IP: This site can’t be reached
+
+            -> login-app container command gave only Nginx, But we need Login App 
+
+            -> docker container exec -it login-app bash 
+
+            -> ls /var/www/html
+
+                -> ls: cannot access '/var/www/html': No such file or directory
+
+                -> NOTE: Above directory is valid in Servers, but not in containers
+
+            -> Inside Containers Created With Nginx Image, directory root is 
+
+                -> ls /usr/share/nginx/html
+                
+                -> cat /usr/share/nginx/html/index.html
+
+            -> git clone https://github.com/ravi2krishna/login-2590.git/usr/share/nginx/html
+
+                -> bash: git: command not found
+
+            -> apt update -y 
+            -> apt install git -y 
+
+            -> git clone https://github.com/ravi2krishna/login-2590.git /usr/share/nginx/html
+
+                -> fatal: destination path '/usr/share/nginx/html' already exists and is not an empty directory.
+
+            -> ls /usr/share/nginx/html
+
+            -> rm -rf /usr/share/nginx/html/* 
+
+            -> ls /usr/share/nginx/html
+
+            -> git clone https://github.com/ravi2krishna/login-2590.git /usr/share/nginx/html
+
+            -> ls /usr/share/nginx/html
+
+        -> NOTE: Test By - Browse Public IP
+
+        -> Let's remove the container and test again by Browsing Public IP
+
+            -> exit
+            -> docker container rm -f login-app
+            -> docker container ls -a
+            -> Test By - Browse Public IP
+            
+        -> Create Login App Container Again 
+
+            -> docker container run -dt --name login-app -p 80:80 nginx   
+
+            -> docker container ls -a
+
+            -> Test By - Browse Public IP
+
+        -> NOTE: With above observation, we can say 
+        when we remove container all the data associated with container is lost. 
+        
+        -> NOTE: By default Containers are "Non-Persistent" (ephemeral) in nature.
+
+        -> NOTE: To Setup Login App, we need to repeat all the steps again. 
+
+
+        -> Now We Want Persistency For Containers 
+
+        -> NOTE: To Achieve Persistency, We Use "Docker Volumes"
+
+        -> NOTE: Check below link 
+
+            -> https://drive.google.com/file/d/1eJa4LMsUz5HJplEm-X6m91Hr5XnIV-j8/view?usp=sharing
+
+    
+    -> Goal: Achieve Data Persistency For Login App 
+
+        -> docker volume ls 
+
+    -> docker volume ls 
+            
+            -> docker container rm -f login-app
+            -> docker container ls -a
+
+            -> docker container run -dt --name login-app -p 80:80 -v login-volume:/usr/share/nginx/html nginx   
+        
+            -> NOTE: Observations made from above command 
+
+                - **`login-volume`**: This is the name of a Docker-managed volume. 
+                If it doesn't already exist, Docker will create it automatically.
+                
+                - **`/usr/share/nginx/html`**: This is the directory inside the container 
+                where the volume is mounted.
+
+                **Effect:**  
+                Any files placed in `login-volume` on the host 
+                (or within the volume if managed by Docker) will appear inside the 
+                container at `/usr/share/nginx/html`. 
+                Conversely, files inside that container directory will be stored in the volume.
+
+                **Purpose:**  
+                This setup is typically used to persist website files 
+                (like HTML, CSS, JavaScript) across container restarts, 
+                or to serve custom static content with nginx.
+
+                In summary, `-v login-volume:/usr/share/nginx/html` 
+                links the named volume `login-volume` to the container's web root directory, 
+                allowing persistent and shareable storage of website content.
+
+            -> docker container ls -a
+
+            -> docker volume ls 
+
+                -> This volume is on host 
+
+            -> docker volume inspect login-volume
+
+                -> "Mountpoint": "/var/lib/docker/volumes/login-volume/_data"
+
+                -> sudo ls /var/lib/docker/volumes/login-volume/_data
+
+                -> 50x.html  index.html
+
+            -> Let's Test Volumes, by removing container
+            
+                -> docker container rm -f login-app
+                -> docker container ls -a
+
+                -> docker volume ls 
+
+                -> sudo ls /var/lib/docker/volumes/login-volume/_data
+
+                -> NOTE: With above command we can say volumes helped in data Persistency
+
+        -> docker container run -dt --name login-app -p 80:80 -v login-volume:/usr/share/nginx/html nginx   
+
+        -> docker container ls -a
+
+        -> docker volume ls 
+
+        -> docker container exec -it login-app bash 
+
+        -> apt update -y 
+        -> apt install git -y 
+
+        -> rm -rf /usr/share/nginx/html/* 
+
+        -> git clone https://github.com/ravi2krishna/login-2603.git /usr/share/nginx/html
+
+        -> NOTE: Test By - Browse Public IP
+
+        -> exit
+
+        -> sudo ls /var/lib/docker/volumes/login-volume/_data
+
+    -> NOTE: Final Confirmation 
+
+        -> docker container rm -f login-app
+        -> docker container ls -a
+        -> docker volume ls 
+        -> sudo ls /var/lib/docker/volumes/login-volume/_data
+
+    -> docker container run -dt --name login-app -p 80:80 -v login-volume:/usr/share/nginx/html nginx   
+    -> docker container ls -a
+    -> NOTE: Test By - Browse Public IP
