@@ -1872,7 +1872,7 @@ class - 10
 
         -> rm -rf /usr/share/nginx/html/* 
 
-        -> git clone https://github.com/ravi2krishna/login-2603.git /usr/share/nginx/html
+        -> git clone https://github.com/ravi2krishna/login-2590.git /usr/share/nginx/html
 
         -> NOTE: Test By - Browse Public IP
 
@@ -1890,3 +1890,159 @@ class - 10
     -> docker container run -dt --name login-app -p 80:80 -v login-volume:/usr/share/nginx/html nginx   
     -> docker container ls -a
     -> NOTE: Test By - Browse Public IP
+
+
+class - 11
+==========
+
+    -> Docker Bind Mounts 
+
+        -> Docker Bind Mounts Allows you to Map Specific file or Folder 
+        from your host machine to Docker Container 
+
+        -> Unlike Docker Volumes, which are managed by Docker in a dedicated 
+        storage location (/var/lib/docker/volumes) bind mounts depends on 
+        hosts specific directory.
+
+    -> Without Bind Mounts
+    
+        -> docker container run -dt --name login-app-dev -p 8080:80 -v login-volume:/usr/share/nginx/html nginx   
+
+        -> Update Code in GitHub and Verify if changes are coming through browser 
+
+            -> No changes updated 
+
+            -> docker container exec -it login-app-dev bash 
+            -> cd /usr/share/nginx/html
+            -> ls
+            -> git pull 
+                -> bash: git: command not found
+            -> exit 
+            -> docker container rm -f login-app-dev
+            -> docker container ls -a 
+
+    -> Syntax for bind mounts
+
+            -> docker container run -dt --name name_of_container -p 8080:80 -v /path_on_host:/usr/share/nginx/html nginx   
+
+        -> Syntax for volumes
+
+            -> docker container run -dt --name name_of_container -p 8080:80 -v name_of_volume:/usr/share/nginx/html nginx 
+
+    -> With Bind Mounts
+
+        -> ls 
+        -> mkdir app 
+        -> ls 
+        -> ls app
+        -> docker container run -dt --name web-app -p 8085:80 -v /home/ubuntu/app:/usr/share/nginx/html nginx   
+        -> docker container ls -a 
+        -> ls app 
+        -> Browse IP with port 8085
+        -> docker container exec web-app ls /usr/share/nginx/html
+        -> vi app/index.html
+        -> <h1>Bind Mount Working</h1>
+        -> docker container exec web-app ls /usr/share/nginx/html
+        -> Browse IP with port 8085
+
+
+        -> ls
+        -> git clone https://github.com/ravi2krishna/login-2590.git
+        -> ls 
+        -> docker container run -dt --name login-app-dev -p 8080:80 -v /home/ubuntu/login-2590:/usr/share/nginx/html nginx   
+        -> docker container ls -a 
+        -> Browse IP with port 8080 
+        -> Make an change in code base again to test bind mount 
+        -> cd /home/ubuntu/login-2603
+        -> git pull 
+        -> Browse IP with port 8080 
+
+
+        -> NOTE: With Volumes whatever we do in the Container, it reflects on the Host.
+
+        -> NOTE: With Bind Mounts whatever we do in the Host, it reflects on the Container.
+
+        -> NOTE: Use Docker Volumes when data is FIXED
+
+        -> NOTE: Use Docker Bind Mounts when data is VARIABLE 
+
+    
+    -> NOTE: Say Our Server Encountered Downtime (Because Of Some Hardware Failure)
+
+        -> Next Step is to create a new server in a different Datacenter and host the application 
+
+            -> Launch New Server & Setup Docker 
+
+            -> Create Container Using Volumes & Bind Mounts 
+
+                -> docker container run -dt --name login-app-dev -p 8080:80 -v login-volume:/usr/share/nginx/html nginx   
+
+                -> docker container ls -a 
+
+                -> Browse IP with Port 8080 
+
+                -> NOTE: Login Application is NOT Working (Default Nginx Page Came)
+
+
+
+                -> docker container run -dt --name login-app-qa -p 8081:80 -v /home/ubuntu/login-2590:/usr/share/nginx/html nginx   
+
+                -> docker container ls -a 
+
+                -> Browse IP with Port 8081 
+
+                -> NOTE: Login Application is NOT Working (Forbidden Error)
+
+        
+        -> With Above Operations, we can say Volumes & Bind Mounts 
+        create dependencies, which breaks the Principal of "Portability"
+
+        -> NOTE: Now we want "Portability" and "Data" required for application to work,
+        to Achieve this we need to "Dockerize Applications" / Building Custom Image 
+
+        
+        
+    -> Dockerize Applications / Build Custom Docker Images 
+
+        -> The process of Dockerizing an application involves creating a "Dockerfile" 
+        building a Docker image, and running the application as a Docker container.
+
+        -> NOTE: Suggestion given from Official Nginx Image 
+
+        
+        -> https://hub.docker.com/_/nginx?xk=ShowRecommendedBadge&xt=Enabled
+
+                -> Alternatively, a simple Dockerfile can be used to generate a new image 
+                that includes the necessary content (which is a much cleaner solution 
+                than the bind mount above or volumes)
+
+        
+        -> Dockerizing an application is the process of converting an application to run
+        within a docker container without any dependencies 
+
+        -> Docker can build custom images automatically by reading instructions from "Dockerfile"
+    
+
+    -> Dockerfile 
+
+        -> A Dockerfile is a text document that contains all the commands 
+        a user could call on command line to assemble an image 
+
+        -> NOTE: Dockerfile is the source code for Docker Image 
+
+        -> Nginx Dockerfile - https://github.com/nginx/docker-nginx/blob/71081b25390771f6b1275ddf7c73c965f304493f/mainline/debian/Dockerfile
+
+            -> GitHub Stores Source Code 
+            -> Content(Code) in Dockerfile is nothing but commands to setup Nginx 
+
+
+    -> Dockerizing an application Requires following flow 
+
+        -> Create Dockerfile with Required Commands / instructions in your project 
+        i.e Your App Repository
+
+        -> Use "docker build" command, to create docker image 
+
+        -> Run the container using the image that we built in Previous Step for Confirmation
+
+        -> https://miro.medium.com/v2/1*eh-tX75FFzQffFhCfCZaMA.png
