@@ -2046,3 +2046,198 @@ class - 11
         -> Run the container using the image that we built in Previous Step for Confirmation
 
         -> https://miro.medium.com/v2/1*eh-tX75FFzQffFhCfCZaMA.png
+
+
+class - 12
+==========
+
+    -> Dockerize Login Application 
+
+    -> git clone https://github.com/ravi2krishna/login-2590.git
+
+    -> cd ~/login-2590
+
+    -> Syntax For Building Docker Images 
+
+        -> docker build -t username_docker_hub/custom_image_name . 
+
+    -> Create an account on Docker Hub 
+
+    -> docker build -t ravi2krishna/login-2590 . 
+
+        -> ERROR: failed to build: failed to solve: failed to read dockerfile: open Dockerfile: no such file or directory
+
+    -> touch Dockerfile
+
+    -> docker build -t ravi2krishna/login-2590 .      
+
+        -> ERROR: failed to build: failed to solve: the Dockerfile cannot be empty
+
+    -> cat Dockerfile 
+
+        -> please build login app image
+
+    -> docker build -t ravi2krishna/login-2590 .      
+
+        -> ERROR: failed to build: failed to solve: dockerfile parse error on line 1: unknown instruction: please
+
+
+    -> NOTE: To Build Docker Images, We need to Follow Docker Instructions Only 
+
+    
+    -> Docker Instructions / Docker Directives 
+
+        # - Means Comments Ignored By Docker 
+
+        -> NOTE: Docker Instructions / Docker Directives should be in Upper Case
+
+        FROM - Set Base Image 
+        COPY - Copy Files To Image 
+        WORKDIR - Set Working Directory 
+        RUN - Execute Commands In Container 
+        CMD - Set Executable For Container 
+        EXPOSE - Set Port Number 
+        LABEL - Maintainer Info 
+        ENV - Environment Variables 
+        etc 
+
+    -> Official Nginx Dockerfile - 
+        https://github.com/nginx/docker-nginx/blob/71081b25390771f6b1275ddf7c73c965f304493f/mainline/debian/Dockerfile     
+
+
+    -> Cat Dockerfile 
+
+        # Comment Ignored
+
+        # FROM - To Set Base Functionality
+        # FROM ubuntu -> Install Nginx -> Deploy Application Code
+        FROM nginx
+
+    -> docker build -t ravi2krishna/login-2590 .
+
+    -> docker image ls 
+
+        ravi2krishna/login-2590:latest   22e0e0e18d03        238MB         63.1MB
+
+    -> We Want Custom Code In Above Image 
+
+    
+    -> cat Dockerfile
+
+        # Comment Ignored
+
+        # FROM - To Set Base Functionality
+        # FROM ubuntu -> Install Nginx -> Deploy Application Code
+        FROM nginx
+
+        # COPY - To Copy FIles To Above Image
+        # COPY SRC_HOST DEST_IMAGE
+        COPY . /usr/share/nginx/html
+
+
+    -> docker build -t ravi2krishna/login-2590 .
+
+    -> docker container run -dt --name app2 -p 8081:80 ravi2krishna/login-2590
+
+    -> docker container ls -a 
+
+    -> NOTE: Currently Custom Image is on Host, To get Portability 
+    Upload / Push Image To Docker Registry i.e Docker Hub 
+
+        -> docker push image 
+
+        -> docker push ravi2krishna/login-2590 
+
+            -> push access denied, authorization failed
+
+        -> Like GitHub, In Docker Hub, Create Token 
+
+            -> docker login -u ravi2krishna 
+
+            -> Paste Token 
+
+            -> docker push ravi2krishna/login-2590 
+
+
+    -> NOTE: To Confirm Image is Built Properly and Achieved Portability
+    Create a new VM and run the below command in Newly Created VM 
+
+        -> docker container run -dt --name app2 -p 8081:80 ravi2krishna/login-2590
+
+    
+
+    -> Docker Tags 
+
+        -> Docker tags are human-readable aliases used to version and organize images 
+        within a repository.
+
+        -> The Default Tag: If you do not specify a tag when pulling or building an image, 
+        Docker automatically applies the :latest tag
+
+        -> Multiple Tags: A single image ID can have multiple tags. 
+        For example, the same image might be tagged as both v1.2.3 and latest.
+
+        -> docker container run -dt --name ub1 ubuntu 
+
+        -> docker container run -dt --name ub1 ubuntu:latest (implicitly)
+
+            -> Status: Downloaded newer image for ubuntu:latest
+
+            -> docker container exec ub1 cat /etc/os-release
+                PRETTY_NAME="Ubuntu 26.04 LTS"
+                NAME="Ubuntu"
+                VERSION_ID="26.04"
+
+        -> New Requirement: We need containers with Ubuntu 24
+
+            -> docker container run -dt --name ub1 ubuntu:tag 
+
+            -> docker container run -dt --name ub1 ubuntu:10 
+
+                -> Error response from daemon: failed to resolve reference "docker.io/library/ubuntu:10": docker.io/library/ubuntu:10: not found    
+
+            -> docker container run -dt --name ub2 ubuntu:24.04  
+
+        
+        -> New Requirement For Login App 
+
+            -> Student Login Form 
+
+            -> Trainer Login Form 
+
+            -> Admin Login Form 
+
+        -> NOTE: For Above Requirement, We can have Three Different Tags 
+        in terms of Docker Images and Similarly We can have Tags in GitHub Too 
+
+    
+        -> Create Tags In GitHub and Relevant Tags in DockerHub 
+
+        -> GitHub Releases (Source Code)
+
+            -> https://github.com/ravi2krishna/login-2590/archive/refs/tags/1.1.tar.gz
+
+            -> https://github.com/ravi2krishna/login-2590/archive/refs/tags/2.1.tar.gz
+
+
+        -> Download Releases (Source Code)
+
+            -> wget https://github.com/ravi2krishna/login-2590/archive/refs/tags/1.1.tar.gz
+
+            -> wget https://github.com/ravi2krishna/login-2590/archive/refs/tags/2.1.tar.gz 
+
+
+        -> Extract 
+
+            -> tar xf 2.1.tar.gz
+
+
+        -> Login Images (Binary)
+
+            -> ravi2krishna/login-2590:1.1
+
+            -> ravi2krishna/login-2590:2.1
+
+            
+
+
