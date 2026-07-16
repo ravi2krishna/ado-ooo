@@ -2239,5 +2239,198 @@ class - 12
             -> ravi2krishna/login-2590:2.1
 
             
+class - 13
+==========
+
+    -> Project 1 - LMS Application 
+
+        -> Above Project Took 2-3 Hours From Code To Deployment 
+
+            -> Code -> Code Analysis(45 mins) -> [Build -> Release -> Deployment] - 2 Hours  
 
 
+    -> Project 2 - LMS Application 
+
+        -> Implement Acceleration i.e "FASTER" Deployments Using "Containerization" Practice    
+
+        -> Using Docker Approach The Project Takes Just Mins From Code To Deployment 
+
+            -> Code -> Code Analysis(5 mins) -> [Build -> Release -> Deployment] - 5 Mins   
+
+        
+    -> Dockerize LMS Application 
+
+        -> LMS: Frontend + Backend + Database (Web Server - Nodejs API - Postgres DB)
+
+        -> NOTE: Just like LMS App Setup On Server, we will do in Containers 
+
+            -> Setup DB  
+            -> Setup API 
+            -> Setup WebApp  
+
+
+        -> Setup Postgres Database Container 
+
+            -> docker container run -dt --name pg postgres 
+
+            -> docker container ls -a
+
+            -> docker container logs pg
+
+            -> docker container rm pg
+
+            -> docker container ls -a
+
+            -> docker container run -dt --name lms-db -e POSTGRES_PASSWORD=Login@123 postgres 
+
+            -> docker container ls -a
+
+        
+        -> Setup API Container 
+
+            -> docker container run -dt --name t1 node:20 
+
+            -> docker container ls -a
+
+            -> docker container exec t1 node -v 
+
+            -> docker container exec t1 npm -v 
+
+            -> ls
+            -> git clone -b dev https://github.com/ravi2krishna/lms-v1.git 
+            -> ls 
+            -> cd ~/lms-v1/api
+            -> vi .env 
+
+                -> NOTE: Update Container IP Address & Password 
+
+                -> docker container inspect lms-db
+
+                MODE=dev
+                PORT=8080
+                DATABASE_URL=postgresql://postgres:db_password@localhost:5432/postgres
+
+
+            -> Prepare Dockerfile for API 
+
+                -> rm Dockerfile
+
+                -> vi Dockerfile
+
+                    # Setup LMS API
+
+                    # Base Image
+                    FROM node:20
+
+                    # RUN - Runs Commands
+                    RUN mkdir /backend
+
+                    # WORKDIR - Set Path As Working Directory
+                    WORKDIR /backend
+
+                    # COPY - Copy Code
+                    COPY . /backend
+
+                    # RUN - Build Related Commands
+                    RUN npm install
+                    RUN npx prisma generate
+                    RUN npx prisma db push
+                    RUN npm run build
+
+                    # Start Application
+                    # RUN node build/index.js
+                    CMD ["node","build/index.js"]
+
+            -> docker build -t ravi2krishna/lms-be . 
+
+            -> docker image ls 
+
+            -> docker container rm -f t1
+
+            -> docker container run -dt --name lms-be -p 8080:8080 ravi2krishna/lms-be
+
+            -> docker container ls -a 
+
+            -> Verify Backend Status 
+
+            -> Verify with Browser - http://public-ip:8080/api  
+
+            -> NOTE: If you get below message, backend deployment is success   
+            
+                {"message":"success","mode":"dev"}
+
+
+
+        -> Setup Frontend Container 
+
+            -> cd ~/lms-v1/webapp/
+
+            -> vi .env 
+
+                VITE_API_URL=http://public-ip:8080/api
+
+            -> rm Dockerfile
+
+            -> vi Dockerfile
+
+                # Setup LMS WebApp
+
+                # Base Image
+                FROM node:20 AS fe-build
+
+                # RUN - Runs Commands
+                RUN mkdir /frontend
+
+                # WORKDIR - Set Path As Working Directory
+                WORKDIR /frontend
+
+                # COPY - Copy Code
+                COPY . /frontend
+
+                # RUN - Build Related Commands
+                RUN npm install
+                RUN npm run build
+
+                # Deploying Application On Nginx
+                FROM nginx
+
+                COPY --from=fe-build /frontend/dist /usr/share/nginx/html
+
+            -> docker build -t ravi2krishna/lms-fe . 
+
+            -> docker image ls 
+
+            -> docker container run -dt --name lms-fe -p 80:80 ravi2krishna/lms-fe
+
+            -> docker container ls -a 
+
+
+    -> NOTE: In Future, if i want to run LMS Application
+
+        -> docker container run -dt --name lms-db -e POSTGRES_PASSWORD=Login@123 postgres 
+
+        -> docker container run -dt --name lms-be -p 8080:8080 ravi2krishna/lms-be
+
+        -> docker container run -dt --name lms-fe -p 80:80 ravi2krishna/lms-fe
+
+
+    
+    -> DevOps is a set of PRACTICES that works towards the 
+    "AUTOMATION" and "INTEGRATION" of the processes between 
+    Software Development (Dev) and IT (Ops) teams, 
+    so that organizations can "BUILD", "TEST" and "DEPLOY" 
+    softwares/applications "FASTER" and more "RELIABLE"    
+
+
+    -> Project 2 - LMS Application (Goal Achieved)
+
+        -> Implement Acceleration i.e "FASTER" Deployments Using "Containerization" Practice    
+
+
+    -> Project - 3 
+
+        -> Implement RELIABILITY 
+
+            -> Always Running Applications without Downtime (Run 24 X 7) 
+
+            -> To Achieve Reliability We have "Orchestration" Practice 
