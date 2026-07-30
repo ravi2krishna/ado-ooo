@@ -2889,3 +2889,52 @@ class - 17
             -> kubectl port-forward --address 0.0.0.0 service/service_name node_port:app_port 
 
             -> kubectl port-forward --address 0.0.0.0 service/nginx-service 30000:80  
+
+
+class - 18
+==========
+
+    -> NOTE: In Docker We have Volumes for data management, likewise we have 
+    Kubernetes Persistent Volume.
+
+    -> Persistent Volumes - PV 
+
+        -> A PersistentVolume (PV) is a piece of "storage" in the cluster
+
+        -> PersistentVolume represents storage independent of pods 
+
+            -> How volumes are independent of containers  
+
+    
+    -> PersistentVolumeClaim - PVC
+
+        -> A PersistentVolumeClaim is a request for storage by a pod
+
+    
+    -> Storage Class
+
+        -> A StorageClass in Kubernetes defines the type of storage to use 
+
+    -> NOTE: How everything is connected
+
+        -> Pod -> Persistent Volume Claim -> Persistent Volume -> Physical Storage(/mnt/data)
+
+        -> https://kubernetes.io/docs/tutorials/configuration/configure-persistent-volume-storage/
+
+    
+    
+    -> Namespace 
+
+        -> In Kubernetes, namespaces provide a mechanism for isolation
+
+        -> Like we have branches in git, we have namespaces in kubernetes 
+
+        -> https://miro.medium.com/v2/resize:fit:1200/1*1zWBdgIgpUjRReDzLHt5Dg.png
+
+        -> https://kubernetes.io/docs/tasks/administer-cluster/namespaces/#creating-a-new-namespace
+
+        -> kubectl get namespace 
+
+        -> kubectl get ns 
+
+        -> kubectl get pods -n kube-node-lease
