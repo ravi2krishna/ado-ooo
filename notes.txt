@@ -2938,3 +2938,42 @@ class - 18
         -> kubectl get ns 
 
         -> kubectl get pods -n kube-node-lease
+
+
+class - 19
+==========
+
+    -> Auto Scaling 
+
+        -> In Kubernetes We can go with Manual & Automatic Scaling 
+
+        -> Manual Scaling is straight forward, just change the replicas 
+        i.e increase and decrease the replicas. 
+
+        -> In Kubernetes, you can automatically scale a workload using 
+        an object called HorizontalPodAutoscaler (HPA)
+
+        -> https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/
+
+        -> Check Metrics Server 
+
+            -> kubectl get pods -n kube-system 
+
+        -> To Get Metrics Server 
+
+            -> minikube addons enable metrics-server
+
+            -> kubectl get pods -n kube-system 
+
+        -> requests = cpu: 200m
+
+            -> 1000 milli cpu = 1 cpu 
+
+            -> The container is asking for 200 milli cpu to be "reserved" 
+
+        -> limits: cpu: 500m 
+
+            -> The container can use up to 500 milli cpu max 
+
+        -> Will Use Cluster IP Service For communication 
+        i.e reaching the Pods 
