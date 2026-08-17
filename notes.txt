@@ -3036,3 +3036,39 @@ class - 20
 
             kubectl get pods
             kubectl get services 
+
+
+class - 21
+==========
+
+    -> CI / CD (Continuous Integration & Continuous Deployment)
+
+        -> CI/CD is a method to frequently deliver apps to customers by 
+        introducing automation into the stages of app development.
+
+        -> CI/CD bridges the gaps between development and operation activities
+
+        -> CI/CD enforces automation in building, testing and deployment of applications.
+
+    
+    -> To Implement CI - CD Pipelines, we are choosing Azure DevOps Platform. 
+
+    -> Azure DevOps 
+
+        -> Azure DevOps is a suit of Development Tools Provided by Microsoft 
+        which helps organizations to Plan, Built, Test and Deploy Applications. 
+
+            -> Azure Boards: Project Management Like In GitHub we had issues, 
+            Similarly we have User Stories in Azure Boards. 
+
+            -> Azure Repos: Provides Git Repositories For Source Code Management
+            i.e Collaborate On Code and Manage Versioning. 
+
+            -> Azure Pipelines: Enables CI & CD to automate the Build & Deployments. 
+
+
+    -> Create Account On Azure DevOps Platform 
+
+        -> https://aex.dev.azure.com/
+
+    ->      
